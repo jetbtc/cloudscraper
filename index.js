@@ -1,7 +1,8 @@
-var request      = require('request').defaults({jar: true}), // Cookies should be enabled
+var r            = require('request'), // Cookies should be enabled
     UserAgent    = 'Ubuntu Chromium/34.0.1847.116 Chrome/34.0.1847.116 Safari/537.36',
     Timeout      = 6000, // Cloudflare requires a delay of 5 seconds, so wait for at least 6.
-    cloudscraper = {};
+    cloudscraper = {},
+    request;
 
 /**
  * Performs get request to url with headers.
@@ -121,4 +122,13 @@ function solveChallenge(response, body, requestHeaders, callback) {
   });
 }
 
-module.exports = cloudscraper;
+module.exports = function(opts) {
+  if(opts) {
+    opts.jar = opts.jar || true;
+    request = r.defaults(opts);
+  } else {
+    request = r.defaults({jar: true});
+  }
+
+  return cloudscraper
+};
